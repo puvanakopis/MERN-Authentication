@@ -6,14 +6,14 @@ export const register = async (req, res) => {
     const { name, email, password } = req.body
 
     if (!name || !email || !password) {
-        return res.json({ success: false, messagge: 'Missing Details' })
+        return res.json({ success: false, message: 'Missing Details' })
     }
 
     try {
-        const existingUser = await userModel.find({ email })
+        const existingUser = await userModel.findOne({ email })
 
         if (existingUser) {
-            return res.json({ success: false, messagge: 'User already exists' })
+            return res.json({ success: false, message: 'User already exists' })
         }
 
         const hashedPassword = await bcrypt.hash(password, 10)
@@ -34,7 +34,7 @@ export const register = async (req, res) => {
         return res.json({ success: true })
 
     } catch (error) {
-        return res.json({ success: false, messagge: error.messagge })
+        return res.json({ success: false, message: error.message })
     }
 }
 
@@ -43,20 +43,20 @@ export const login = async (req, res) => {
     const { email, password } = req.body
 
     if (!email || !password) {
-        return res.json({ success: false, messagge: 'Email and password are required' })
+        return res.json({ success: false, message: 'Email and password are required' })
     }
 
     try {
         const user = await userModel.findOne({ email })
 
         if (!user) {
-            return res.json({ success: false, messagge: 'Invalid email' })
+            return res.json({ success: false, message: 'Invalid email' })
         }
 
         const isMatch = await bcrypt.compare(password, user.password)
 
         if (!isMatch) {
-            return res.json({ success: false, messagge: 'Invalid password' })
+            return res.json({ success: false, message: 'Invalid password' })
         }
 
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' })
@@ -71,22 +71,21 @@ export const login = async (req, res) => {
         return res.json({ success: true })
 
     } catch (error) {
-        return res.send({ success: false, messagge: error.messagge })
+        return res.send({ success: false, message: error.message })
     }
 }
 
 
-export const loout = async (req, res) => {
+export const logout = async (req, res) => {
     try {
         res.clearCookie('token', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict',
-            'none': 'strict'
         })
 
-        return res.json({ success: true, messagge: 'Logged Out' })
+        return res.json({ success: true, message: 'Logged Out' })
     } catch (error) {
-        return res.send({ success: false, messagge: error.messagge })
+        return res.send({ success: false, message: error.message })
     }
 }
