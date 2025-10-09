@@ -104,6 +104,8 @@ export const logout = async (req, res) => {
 }
 
 
+
+
 export const sentVeriFyOtp = async (req, res) => {
     try {
         const { userId } = req.body
@@ -143,6 +145,7 @@ export const verifyEmail = async (req, res) => {
     const { userId, otp } = req.body
 
     if (!userId || !otp) {
+        console.log('No otp')
         return res.json({ success: false, message: "Missin Details" })
     }
 
