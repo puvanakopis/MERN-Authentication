@@ -5,13 +5,14 @@ import { toast } from 'react-toastify';
 import { useContext } from 'react';
 import { AppContext } from '../context/AppContext';
 import axios from 'axios';
+import { useEffect } from 'react';
 
 
 const EmailVerify = () => {
 
   axios.defaults.withCredentials = true
 
-  const { backendUrl, getUserData, userData } = useContext(AppContext)
+  const { backendUrl, getUserData, userData, isLoggedin } = useContext(AppContext)
 
   const navigate = useNavigate();
 
@@ -61,6 +62,13 @@ const EmailVerify = () => {
     }
   }
 
+  useEffect(() => {
+    if (isLoggedin && userData && userData.isAccountVerified) {
+      navigate('/')
+    }
+  }, [isLoggedin, userData, navigate])
+
+
   return (
     <div className="flex items-center justify-center min-h-screen sm:px-0 bg-gradient-to-br from-blue-200 to-purple-400">
       <img
@@ -85,7 +93,7 @@ const EmailVerify = () => {
                 type="text"
                 maxLength="1"
                 key={index}
-                ref={(el) => (inputRefs.current[index] = el)}
+                ref={(e) => (inputRefs.current[index] = e)}
                 onInput={(e) => handleInput(e, index)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 required

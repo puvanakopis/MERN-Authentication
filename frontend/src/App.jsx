@@ -10,7 +10,7 @@ import { ToastContainer } from 'react-toastify';
 const App = () => {
   return (
     <div className='app'>
-      <ToastContainer/>
+      <ToastContainer />
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/login' element={<Login />} />
